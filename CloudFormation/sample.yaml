@@ -19,12 +19,10 @@ Resources:
       Runtime: nodejs12.x
       Role: !GetAtt 'MyFunctionRole.Arn'
       Handler: index.handler
+      FunctionName: MyCFLambda
       Code:
-        ZipFile: |
-          exports.handler = function(event, context) {              
-              console.log("REQUEST RECEIVED:\n" + JSON.stringify(event))
-              console.log("Custom log: cloud formation working \n")
-          }
+        S3Bucket: sodaru-templates
+        S3Key: index.zip
       Description: Invoke a function during stack creation.
       TracingConfig:
         Mode: Active
