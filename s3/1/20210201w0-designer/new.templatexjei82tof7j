@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Lambda function with cfn-response.
+Resources:
+  MyCFFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: nodejs12.x
+      Role: !GetAtt 'MyFunctionRole.Arn'
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          exports.handler = function(event, context) {              
+              console.log("REQUEST RECEIVED:\n" + JSON.stringify(event))
+              console.log("Custom log: cloud formation working \n")
+          }
+      Description: Invoke a function during stack creation.
+      TracingConfig:
+        Mode: Active
+  MyFunctionRole:
+      Type: AWS::IAM::Role
+      Properties:
+         AssumeRolePolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+               - Effect: Allow
+                 Principal:
+                    Service: lambda.amazonaws.com
+                 Action: sts:AssumeRole
+         ManagedPolicyArns:
+            -arn:aws:iam::aws:policy/service role/AWSLambdaBasicExecutionRole

@@ -1,0 +1,10 @@
+aws cloudformation create-stack --stack-name mytestCFstack --template-body file://sample.yaml --capabilities CAPABILITY_IAM
+
+aws cloudformation update-stack --stack-name mytestCFstack --template-body file://sample.yaml --capabilities CAPABILITY_IAM
+
+aws cloudformation delete-stack --stack-name mytestCFstack
+
+
+https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html
+
+arn:aws:sns:ap-south-1:315143150079:MySnsTopic

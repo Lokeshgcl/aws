@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: sample lambda cloud formation Template.
+Resources:
+  primer:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: nodejs12.x
+      Role: arn:aws:iam::315143150079:role/lambda-ex
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          exports.handler = async function(event, context) {
+				console.log("custom log : cloud formation working  \n")              
+				console.log("REQUEST RECEIVED:\n" + JSON.stringify(event))              
+          }
+      Description: Invoke a function during stack creation.
+      TracingConfig:
+        Mode: Active
