@@ -32,3 +32,9 @@ Resources:
       TopicArn: arn:aws:sns:ap-south-1:315143150079:MySnsTopic
       Endpoint: !GetAtt MyCFFunction.Arn
       Protocol: lambda
+  permission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt MyCFFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
