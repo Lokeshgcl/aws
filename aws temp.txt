@@ -1,0 +1,7 @@
+aws lambda add-permission --function-name MyCFLambda --source-arn arn:aws:sns:ap-south-1:315143150079:MySnsTopic --statement-id MyCFLambda --action "lambda:InvokeFunction" --principal sns.amazonaws.com
+
+aws lambda remove-permission --function-name MyCFLambda --statement-id my-function
+aws lambda add-permission --function-name MyCFLambda --action "lambda:InvokeFunction" --principal sns.amazonaws.com --statement-id sns
+
+
+aws sns publish --topic-arn "arn:aws:sns:ap-south-1:315143150079:MySnsTopic" --message "Hello World from SNS with env variable 10!"

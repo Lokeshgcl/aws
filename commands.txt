@@ -1,0 +1,44 @@
+sam
+sam init
+sam build
+sam deploy --guided
+aws cloudformation delete-stack --stack-name sam2
+sam local invoke "HelloWorldFunction" -e events/event.json
+
+
+Slack info not message url
+https://wiredelta.com/how-was-slack-developed/
+
+Lambda
+aws lambda update-function-code --function-name  my-function --zip-file fileb://index.zip
+aws lambda add-permission --function-name my-function --source-arn arn:aws:sns:ap-south-1:315143150079:MySnsTopic --statement-id my-function --action "lambda:InvokeFunction" --principal sns.amazonaws.com
+aws lambda add-permission --function-name my-function --action "lambda:InvokeFunction" --principal sns.amazonaws.com
+aws lambda remove-permission --function-name my-function --statement-id sns
+aws lambda get-function-configuration --function-name my-function
+aws lambda update-function-configuration --function-name my-function --environment "Variables={slackurl=https://hooks.slack.com/services/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}"
+
+sns
+aws sns subscribe --protocol lambda --topic-arn arn:aws:sns:ap-south-1:315143150079:MySnsTopic --notification-endpoint arn:aws:lambda:ap-south-1:315143150079:function:my-function
+aws sns publish --topic-arn "arn:aws:sns:ap-south-1:315143150079:MySnsTopic" --message "Hello World from SNS with env variable!"
+https://5zi445nvqc.execute-api.ap-south-1.amazonaws.com/Prod/hello/
+
+Cloud Formation
+aws cloudformation create-stack --stack-name mytestCFstack --template-body file://sample.yaml --capabilities CAPABILITY_IAM
+aws cloudformation update-stack --stack-name mytestCFstack --template-body file://sample.yaml --capabilities CAPABILITY_IAM
+aws cloudformation delete-stack --stack-name mytestCFstack
+
+s3
+aws s3 cp s3://cf-templates-zvpf73u96p5b-ap-south-1 . --recursive
+aws s3 rm s3://cf-templates-zvpf73u96p5b-ap-south-1 --recursive
+aws s3 cp index.zip s3://sodaru-templates/index.zip
+
+
+
+slack
+curl -X POST -H "Content-type:application/json" --data "{\"text\":\"Hello, World curl!\"}" https://hooks.slack.com/services/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
+	New
+	https://hooks.slack.com/services/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
+	
+
+Profile
+setx AWS_PROFILE loki3
