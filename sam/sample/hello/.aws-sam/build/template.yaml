@@ -15,6 +15,10 @@ Resources:
       CodeUri: HelloWorldFunction
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
+      Role:
+        Fn::GetAtt:
+        - MyFunctionRole
+        - Arn
       Events:
         HelloWorld:
           Type: Api
@@ -33,6 +37,24 @@ Resources:
           Action: sts:AssumeRole
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AWSLambdaExecute
+  CFSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: arn:aws:sns:ap-south-1:315143150079:MySnsTopic
+      Endpoint:
+        Fn::GetAtt:
+        - HelloWorldFunction
+        - Arn
+      Protocol: lambda
+  permission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - HelloWorldFunction
+        - Arn
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
 Outputs:
   HelloWorldApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World function
@@ -48,5 +70,5 @@ Outputs:
     Description: Implicit IAM Role created for Hello World function
     Value:
       Fn::GetAtt:
-      - HelloWorldFunctionRole
+      - MyFunctionRole
       - Arn

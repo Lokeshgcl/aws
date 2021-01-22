@@ -17,6 +17,7 @@ Resources:
       CodeUri: hello-world/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
+      Role: !GetAtt MyFunctionRole.Arn
       Events:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -35,6 +36,18 @@ Resources:
                  Action: sts:AssumeRole
          ManagedPolicyArns:
             - arn:aws:iam::aws:policy/AWSLambdaExecute
+  CFSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: arn:aws:sns:ap-south-1:315143150079:MySnsTopic
+      Endpoint: !GetAtt HelloWorldFunction.Arn
+      Protocol: lambda
+  permission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt HelloWorldFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
@@ -47,4 +60,4 @@ Outputs:
     Value: !GetAtt HelloWorldFunction.Arn
   HelloWorldFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt MyFunctionRole.Arn
