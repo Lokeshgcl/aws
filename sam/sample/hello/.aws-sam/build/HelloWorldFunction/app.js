@@ -1,5 +1,5 @@
 const axios = require('axios')
-// const url = 'http://checkip.amazonaws.com/';
+const envslackurl = process.env.SLACK_URL
 let response;
 
 /**
@@ -14,13 +14,13 @@ let response;
  * @returns {Object} object - API Gateway Lambda Proxy Output Format
  * 
  */
-exports.lambdaHandler = async (event, context) => {
+exports.lambdaHandler = async (event, context, callback) => {
     try {
-        var message = "sam message, Hello world! 1";
-        //var message = event.Records[0].Sns.Message;
+        //var message = "sam message, Hello world! 1";
+        var message = event.Records[0].Sns.Message;
         console.log('Message received from SNS:', message);
         axios
-            .post('https://hooks.slack.com/services/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', {
+            .post(envslackurl, {
                 text: message
             })
             .then(res => {
@@ -31,17 +31,10 @@ exports.lambdaHandler = async (event, context) => {
                 console.error(error)
             })
 
-        response = {
-            'statusCode': 200,
-            'body': JSON.stringify({
-                message: 'hello world',
-                // location: ret.data.trim()
-            })
-        }
+            
     } catch (err) {
         console.log(err);
         return err;
     }
-
-    return response
+    callback(null, "Success");
 };

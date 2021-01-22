@@ -8,3 +8,5 @@ s3_prefix = "sam2"
 region = "ap-south-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
+slackurl = "https://hooks.slack.com/services/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"
+parameter_overrides = "slackurl=\"https://hooks.slack.com/services/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\""

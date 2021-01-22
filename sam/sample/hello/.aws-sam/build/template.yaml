@@ -8,6 +8,9 @@ Description: 'hello
 Globals:
   Function:
     Timeout: 3
+Parameters:
+  slackurl:
+    Type: String
 Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
@@ -15,10 +18,15 @@ Resources:
       CodeUri: HelloWorldFunction
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
+      FunctionName: SNSLambda
       Role:
         Fn::GetAtt:
         - MyFunctionRole
         - Arn
+      Environment:
+        Variables:
+          SLACK_URL:
+            Ref: slackurl
       Events:
         HelloWorld:
           Type: Api
