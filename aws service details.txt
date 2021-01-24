@@ -1,8 +1,0 @@
-sns
-arn:aws:sns:ap-south-1:315143150079:MySnsTopic
-
-
-s3 file
-arn:aws:s3:::cf-templates-zvpf73u96p5b-ap-south-1
-s3://cf-templates-zvpf73u96p5b-ap-south-1
-s3://cf-templates-zvpf73u96p5b-ap-south-1/20210201w0-designer/new.templatexjei82tof7j
