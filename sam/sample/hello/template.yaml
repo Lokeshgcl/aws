@@ -15,6 +15,25 @@ Parameters:
     Type: String
 
 Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        DefaultAuthorizer: MyLambdaTokenAuthorizer
+        Authorizers:
+          MyLambdaTokenAuthorizer:
+            FunctionArn: !GetAtt MyAuthFunction.Arn
+  MyAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello-world/
+      Handler: authorizer.handler
+      Runtime: nodejs12.x
+  SNSAlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: SNSAlertTopic
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -27,6 +46,16 @@ Resources:
         Variables:
           SLACK_URL: !Ref slackurl
       Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /
+            Method: get
+        SNSTopicEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref SNSAlertTopic
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
@@ -44,12 +73,12 @@ Resources:
                  Action: sts:AssumeRole
          ManagedPolicyArns:
             - arn:aws:iam::aws:policy/AWSLambdaExecute
-  CFSubscription:
-    Type: AWS::SNS::Subscription
-    Properties:
-      TopicArn: arn:aws:sns:ap-south-1:315143150079:MySnsTopic
-      Endpoint: !GetAtt HelloWorldFunction.Arn
-      Protocol: lambda
+  # CFSubscription:
+  #   Type: AWS::SNS::Subscription
+  #   Properties:
+  #     TopicArn: arn:aws:sns:ap-south-1:315143150079:MySnsTopic
+  #     Endpoint: !GetAtt HelloWorldFunction.Arn
+  #     Protocol: lambda
   permission:
     Type: AWS::Lambda::Permission
     Properties:

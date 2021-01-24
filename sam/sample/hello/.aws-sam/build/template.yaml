@@ -12,6 +12,28 @@ Parameters:
   slackurl:
     Type: String
 Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        DefaultAuthorizer: MyLambdaTokenAuthorizer
+        Authorizers:
+          MyLambdaTokenAuthorizer:
+            FunctionArn:
+              Fn::GetAtt:
+              - MyAuthFunction
+              - Arn
+  MyAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: MyAuthFunction
+      Handler: authorizer.handler
+      Runtime: nodejs12.x
+  SNSAlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: SNSAlertTopic
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -28,6 +50,18 @@ Resources:
           SLACK_URL:
             Ref: slackurl
       Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: MyApi
+            Path: /
+            Method: get
+        SNSTopicEvent:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: SNSAlertTopic
         HelloWorld:
           Type: Api
           Properties:
@@ -45,15 +79,6 @@ Resources:
           Action: sts:AssumeRole
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AWSLambdaExecute
-  CFSubscription:
-    Type: AWS::SNS::Subscription
-    Properties:
-      TopicArn: arn:aws:sns:ap-south-1:315143150079:MySnsTopic
-      Endpoint:
-        Fn::GetAtt:
-        - HelloWorldFunction
-        - Arn
-      Protocol: lambda
   permission:
     Type: AWS::Lambda::Permission
     Properties:
