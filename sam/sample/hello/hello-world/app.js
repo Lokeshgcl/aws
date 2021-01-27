@@ -19,9 +19,18 @@ exports.lambdaHandler = async (event, context, callback) => {
         //var message = "sam message, Hello world! 1";
         var message = event.Records[0].Sns.Message;
         console.log('Message received from SNS:', message);
+        console.log('index of \n is :', message.indexOf("\n"));
+        var slaclAlert = "";
+        console.log(message)
+        if (message.includes("AWS::CloudFormation::Stack")) {
+            slaclAlert = "AWS Slack Alert: Slack Name : " + message.substring(message.indexOf("StackName") + 11 
+            , message.indexOf("ClientRequestToken")).replace("'","").trim() + " : " + message.substring(
+                message.indexOf("ResourceStatus") + 16 , message.indexOf("ResourceStatusReason")).replace("'","").trim()            	
+        }
+
         axios
             .post(envslackurl, {
-                text: message
+                text: slaclAlert
             })
             .then(res => {
                 console.log(`statusCode: ${res.statusCode}`)

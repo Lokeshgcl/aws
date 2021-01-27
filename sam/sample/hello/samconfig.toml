@@ -2,14 +2,14 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "sam"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1iiscawbqckp0"
-s3_prefix = "sam"
+stack_name = "aws-slack-alert"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-hfc95scbbyxd"
+s3_prefix = "aws-slack-alert"
 region = "ap-south-1"
 confirm_changeset = true
 notification-arns = ""
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "slackurl=\"\""
+parameter_overrides = ""
 
 [dev]
 stack_name = "sam"
